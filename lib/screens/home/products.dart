@@ -228,7 +228,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                 ),
                               ),
                             );
-                            _providerSvitch = value;
+                            _providerSvitch != value;
                           },
                         ),
                       ),

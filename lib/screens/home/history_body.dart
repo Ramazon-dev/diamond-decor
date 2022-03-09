@@ -1,5 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,7 @@ import 'package:wallpaper/constants/sizeconfig.dart';
 import 'package:wallpaper/core/graphql_clients.dart';
 import 'package:wallpaper/core/query.dart';
 import 'package:wallpaper/provider/provider_switch.dart';
+import 'package:wallpaper/screens/appbar/filterpage.dart';
 import 'package:wallpaper/screens/chat/ordercoment.dart';
 
 class HistoryOrderPage extends StatefulWidget {
@@ -19,10 +21,11 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
   List listOfStrings = ["id", "Дата заказа", "N%", "Артикул", "Статус", 'Чат'];
   List<double> sizeList = [65, 90, 60, 100, 85, 70];
 
-  List listOfRows = ["snapshot.data![index]['node']['id']"];
+  List listOfRows = [];
 
   String amount = "last:10";
-
+  bool isAllcheck = false;
+  List deleteList = List.generate(10, (index) => false);
   int st = 0;
 
   int end = 10;
@@ -49,6 +52,105 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
 
               return Column(
                 children: [
+                  Container(
+                    padding: EdgeInsets.only(
+                      left: getWidth(23),
+                      right: getWidth(23),
+                    ),
+                    height: getHeight(60),
+                    width: getWidth(390),
+                    color: Colors.white,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Filters()));
+                          },
+                          child: SvgPicture.asset("assets/images/Vector.svg"),
+                        ),
+                        Container(
+                            margin: EdgeInsets.only(left: getWidth(220)),
+                            child: const Icon(Icons.file_download_outlined,
+                                size: 28)),
+                        IconButton(
+                            onPressed: () async {
+                              showDialog(
+                                  context: context,
+                                  builder: (_) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      actionsAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      buttonPadding: const EdgeInsets.all(10),
+                                      title: const Text(
+                                        "Вы хотите отменить заказ ?",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Назад'),
+                                          style: ElevatedButton.styleFrom(
+                                            fixedSize: Size(
+                                                getWidth(110), getHeight(45)),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                          ),
+                                        ),
+                                        ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              fixedSize: Size(
+                                                  getWidth(110), getHeight(45)),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                              ),
+                                            ),
+                                            onPressed: () async {
+                                              for (var i = 0;
+                                                  i < snap.data.length;
+                                                  i++) {
+                                                if (deleteList[i]) {
+                                                  var res = await clientAll
+                                                      .value
+                                                      .mutate(MutationOptions(
+                                                    document: gql(
+                                                      deleteOrdder(
+                                                        snap.data.reversed
+                                                                .toList()[i]
+                                                            ['node']['id'],
+                                                      ),
+                                                    ),
+                                                  ));
+                                                }
+                                              }
+                                              deleteList = List.generate(
+                                                  10, (index) => false);
+                                              isAllcheck = false;
+
+                                              Navigator.pop(context);
+                                              setState(() {});
+                                            },
+                                            child: const Text('Да'))
+                                      ],
+                                    );
+                                  });
+                            },
+                            icon: SvgPicture.asset(
+                                "assets/images/Vector(1).svg")),
+                      ],
+                    ),
+                  ),
                   SizedBox(
                     height: getHeight(555),
                     child: ListView(
@@ -64,22 +166,30 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
                                 margin: EdgeInsets.only(
                                     left: getWidth(1), right: getWidth(14)),
                                 child: Container(
-                                  color: primaryColor,
+                                  alignment: Alignment.center,
+                                  color: secondaryColor,
                                   child: Row(
                                     children: [
-                                      ElevatedButton(
-                                        onPressed: () {},
-                                        child: const Icon(Icons.delete),
-                                        style: ElevatedButton.styleFrom(
-                                          fixedSize: Size(
-                                            getWidth(50),
-                                            getHeight(50),
-                                          ),
-                                          minimumSize: Size(
-                                            getWidth(50),
-                                            getHeight(50),
-                                          ),
-                                        ),
+                                      Container(
+                                        color: whiteColor,
+                                        height: 17,
+                                        width: 17,
+                                        margin: const EdgeInsets.all(16),
+                                        child: Checkbox(
+                                            // hoverColor: Colors.white,
+                                            // focusColor: Colors.white,
+                                            checkColor: Colors.white,
+                                            activeColor: secondaryColor,
+                                            value: isAllcheck,
+                                            onChanged: (v) {
+                                              isAllcheck = v!;
+                                              deleteList =
+                                                  List.generate(10, (i) {
+                                                return v;
+                                              });
+
+                                              setState(() {});
+                                            }),
                                       ),
                                       Row(
                                         children: row,
@@ -252,6 +362,8 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
 
   ListView listViewBuilderMethod(List<dynamic> snapshot1) {
     List snapshot = snapshot1.reversed.toList();
+    List listOfRows = List.generate(
+        snapshot.length, (index) => snapshot[index]['node']['id']);
     return ListView.builder(
       itemBuilder: (context, index) {
         List date = snapshot[index]['node']['dateOrder'].split("T");
@@ -265,69 +377,17 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
           ),
           child: Row(
             children: [
-              IconButton(
-                  onPressed: () async {
-                    showDialog(
-                        context: context,
-                        builder: (_) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            actionsAlignment: MainAxisAlignment.spaceAround,
-                            buttonPadding: const EdgeInsets.all(10),
-                            title: Text(
-                              "Вы хотите отменить заказ ${snapshot[index]['node']['id']} ?",
-                              textAlign: TextAlign.center,
-                            ),
-                            actions: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Назад'),
-                                style: ElevatedButton.styleFrom(
-                                  fixedSize: Size(getWidth(110), getHeight(45)),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                ),
-                              ),
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    fixedSize:
-                                        Size(getWidth(110), getHeight(45)),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    var res = await clientAll.value
-                                        .mutate(MutationOptions(
-                                      document: gql(deleteOrdder(
-                                          snapshot[index]['node']['id'])),
-                                    ));
+              Checkbox(
+                  checkColor: Colors.white,
+                  activeColor: primaryColor,
+                  value: deleteList[index],
+                  onChanged: (v) {
+                    deleteList.removeAt(index);
+                    deleteList.insert(index, v);
+                    isAllcheck = false;
 
-                                    setState(() {});
-                                    Navigator.pop(context);
-                                    if (res.data == null) {
-                                      const snackBar = SnackBar(
-                                        content: Text(
-                                          'Вы не можете отменить этот заказ!',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                      );
-
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snackBar);
-                                    }
-                                  },
-                                  child: const Text('Отменить'))
-                            ],
-                          );
-                        });
-                  },
-                  icon: const Icon(Icons.delete)),
+                    setState(() {});
+                  }),
               listorder![0]
                   ? containerMethod(snapshot, index,
                       snapshot[index]['node']['id'].toString(), 60)
@@ -416,6 +476,7 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
         ),
       ),
       style: ElevatedButton.styleFrom(
+        elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(0),
         ),
@@ -440,3 +501,68 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
     return productlist;
   }
 }
+ /* 
+              IconButton(
+                  onPressed: () async {
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            actionsAlignment: MainAxisAlignment.spaceAround,
+                            buttonPadding: const EdgeInsets.all(10),
+                            title: Text(
+                              "Вы хотите отменить заказ ${snapshot[index]['node']['id']} ?",
+                              textAlign: TextAlign.center,
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Назад'),
+                                style: ElevatedButton.styleFrom(
+                                  fixedSize: Size(getWidth(110), getHeight(45)),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                              ),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize:
+                                        Size(getWidth(110), getHeight(45)),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    var res = await clientAll.value
+                                        .mutate(MutationOptions(
+                                      document: gql(deleteOrdder(
+                                          snapshot[index]['node']['id'])),
+                                    ));
+
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                    if (res.data == null) {
+                                      const snackBar = SnackBar(
+                                        content: Text(
+                                          'Вы не можете отменить этот заказ!',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      );
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    }
+                                  },
+                                  child: const Text('Отменить'))
+                            ],
+                          );
+                        });
+                  },
+                  icon: const Icon(Icons.delete)),
+                  */

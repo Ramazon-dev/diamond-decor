@@ -71,15 +71,16 @@ class _OrderProductsState extends State<OrderProducts> {
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: const Offset(0, 2),
+              spreadRadius: 3,
+              blurRadius: 3,
+              offset: const Offset(2, 2),
               blurStyle: BlurStyle.normal,
             ),
           ], // color: Colors.cyan,
           color: Colors.white,
           border: Border.all(
-            color: const Color(0xff878787),
+            color: Colors.white,
+            // color: const Color(0xff878787),
           ),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),

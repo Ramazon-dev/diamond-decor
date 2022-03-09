@@ -10,7 +10,7 @@ class HistoryPage extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          HistoryTop(),
+          // HistoryTop(),
           HistoryOrderPage(),
         ],
       ),

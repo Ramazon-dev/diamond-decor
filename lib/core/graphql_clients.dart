@@ -4,7 +4,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 final box = GetStorage();
 final HttpLink httpLink = HttpLink(
-  'https://crm.softcity.uz/graphql/',
+  'https://diamondcrm.softcity.uz/graphql/',
 );
 
 ValueNotifier<GraphQLClient> clientAll = ValueNotifier(

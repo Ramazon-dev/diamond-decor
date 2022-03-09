@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:wallpaper/constants/constants.dart';
 import 'package:wallpaper/constants/sizeconfig.dart';
@@ -7,10 +6,18 @@ import 'package:wallpaper/core/graphql_clients.dart';
 import 'package:wallpaper/core/query.dart';
 import 'package:wallpaper/screens/home/home_page.dart';
 
-class SignInPage extends StatelessWidget {
-  SignInPage({Key? key}) : super(key: key);
+class SignInPage extends StatefulWidget {
+  const SignInPage({Key? key}) : super(key: key);
+
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   TextEditingController emainController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
 
   @override
@@ -165,16 +172,23 @@ class SignInPage extends StatelessWidget {
                         ),
                       ),
                       onPressed: () async {
+                        setState(() {});
                         if (formKey.currentState!.validate()) {
+                          debugPrint("vaidate dan otdi");
                           QueryResult result =
                               await client.value.mutate(MutationOptions(
                             document: gql(loginQuery(
                                 emainController.text, passwordController.text)),
                           ));
+                          debugPrint("funcsiyadan dan otdi");
                           final productlist = result.data?['login'];
-                          String? accesstoken = productlist['accessToken'];
-                          int? id = productlist['user']['id'];
-                          if (accesstoken == null) {
+                          String accesstoken = productlist['accessToken'] ?? '';
+                          debugPrint("ozgaruvchi dan otdi");
+                          debugPrint("oxirgisidan  otdi");
+                          debugPrint("if dan oldin token $accesstoken");
+                          if (accesstoken == "") {
+                            debugPrint("if ichida token $accesstoken");
+                            setState(() {});
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: const Text(
                                 'Parol xato',
@@ -187,8 +201,11 @@ class SignInPage extends StatelessWidget {
                               ),
                             ));
                           } else {
+                            int? id = productlist['user']['id'];
+
                             await box.write('token', accesstoken);
                             await box.write('id', id.toString());
+                            setState(() {});
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: const Text(
                                 'Login to\'g\'ri',

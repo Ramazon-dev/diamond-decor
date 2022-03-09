@@ -38,8 +38,8 @@ class _SplashScreenState extends State<SplashScreen> {
   islogin(BuildContext context) {
     Future.delayed(const Duration(seconds: 2)).then((value) {
       if (tokenIsExpired()) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SignInPage()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const SignInPage()));
       } else {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomePage()));

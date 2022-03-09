@@ -105,15 +105,17 @@ class AppBArClass extends StatelessWidget with PreferredSizeWidget {
       ),
       onPressed: () async {
         box.remove("token");
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SignInPage()));
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => SignInPage()),
+            (route) => false);
       },
     );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       elevation: 10,
-      buttonPadding: EdgeInsets.all(10),
+      buttonPadding: const EdgeInsets.all(10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
