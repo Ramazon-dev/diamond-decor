@@ -18,7 +18,7 @@ class OrderProducts extends StatefulWidget {
   final int isbook;
   final List? datalist;
   final List orders;
-
+  final String text;
   const OrderProducts(
       {required this.sonlardaa,
       required this.datalist,
@@ -26,6 +26,7 @@ class OrderProducts extends StatefulWidget {
       required this.isbook,
       required this.st,
       required this.orders,
+      required this.text,
       Key? key})
       : super(key: key);
   @override
@@ -44,8 +45,7 @@ class _OrderProductsState extends State<OrderProducts> {
   late TextEditingController controller;
   late List orders;
   var formKey = GlobalKey<FormState>();
-  var searchController =
-      TextEditingController.fromValue(const TextEditingValue(text: ""));
+
   @override
   void initState() {
     super.initState();
@@ -100,13 +100,11 @@ class _OrderProductsState extends State<OrderProducts> {
               }
             }
             if (orders.isEmpty) {
-              debugPrint("order is empty");
               Future.delayed(const Duration(seconds: 2)).then((value) {
                 providerSvitch = false;
                 setState(() {});
               });
             } else {
-              debugPrint(orders.toString());
               await createarray(orders);
               orders.clear();
               sonlar = List<int>.generate(10, (i) => i * 0);
@@ -157,7 +155,7 @@ class _OrderProductsState extends State<OrderProducts> {
         ),
       ),
       body: FutureBuilder(
-        future: getproduct(searchController.text.toString()),
+        future: getproduct(widget.text.toString()),
         builder: (context, AsyncSnapshot<List> snap) {
           if (snap.data == null) {
             return const Center(
@@ -446,10 +444,12 @@ class _OrderProductsState extends State<OrderProducts> {
                                   ),
                                   Container(
                                     alignment: Alignment.center,
-                                    height: 30,
-                                    width: 60,
+                                    height: getHeight(35),
+                                    width: getWidth(65),
                                     margin: EdgeInsets.only(top: getHeight(30)),
                                     child: TextField(
+                                      style: TextStyle(fontSize: 14),
+
                                       // controller: controller,
                                       controller: TextEditingController(
                                         text: "${sonlar[index]}",
@@ -551,7 +551,6 @@ class _OrderProductsState extends State<OrderProducts> {
       document: gql(createOrderQuery(
           userJson["id"], userJson['counterpartyId'], productId, amount)),
     ));
-    print(create.toString());
     return "ok";
   }
 
@@ -560,12 +559,9 @@ class _OrderProductsState extends State<OrderProducts> {
       document: gql(getUser()),
     ));
     final userJson = user.data?["user"];
-    print(userJson['counterpartyId'].toString());
-    print(orders1.toString());
     QueryResult? create = await clientAll.value.mutate(MutationOptions(
       document: gql(createorderarray(userJson['counterpartyId'], orders1)),
     ));
-    print(create.toString());
     return "ok";
   }
 
@@ -575,7 +571,6 @@ class _OrderProductsState extends State<OrderProducts> {
     Widget continueButton = ElevatedButton(
       child: const Text("zakaz"),
       onPressed: () async {
-        print(orders2.toString());
         Navigator.pop(context);
         await createarray(orders2);
         orders.clear();

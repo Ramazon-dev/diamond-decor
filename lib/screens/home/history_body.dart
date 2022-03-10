@@ -172,8 +172,8 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
                                     children: [
                                       Container(
                                         color: whiteColor,
-                                        height: 17,
-                                        width: 17,
+                                        height: getHeight(17),
+                                        width: getWidth(17),
                                         margin: const EdgeInsets.all(16),
                                         child: Checkbox(
                                             // hoverColor: Colors.white,
@@ -200,7 +200,7 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
                               ),
                               SizedBox(height: getHeight(5)),
                               SizedBox(
-                                height: getHeight(500),
+                                height: getHeight(498),
                                 child: CustomRefreshIndicator(
                                   onRefresh: () {
                                     setState(() {});
@@ -496,7 +496,6 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
     QueryResult? products = await clientAll.value.mutate(MutationOptions(
       document: gql(ordersAllQuery(amount)),
     ));
-    debugPrint(products.toString());
     final List productlist = products.data?["orders"]['edges'];
     return productlist;
   }

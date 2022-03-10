@@ -89,6 +89,8 @@ class _ProductsPageState extends State<ProductsPage> {
                     ),
                     controller: searchController,
                     onChanged: (v) {
+                      sonlar = List<int>.generate(10, (i) => i * 0);
+
                       setState(() {
                         st = 0;
                         end = 10;
@@ -105,13 +107,13 @@ class _ProductsPageState extends State<ProductsPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        width: 200,
+                        width: getWidth(200),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              height: 30,
-                              width: 44,
+                              height: getHeight(30),
+                              width: getWidth(44),
                               padding: const EdgeInsets.all(7),
                               decoration: BoxDecoration(
                                 boxShadow: [
@@ -214,7 +216,6 @@ class _ProductsPageState extends State<ProductsPage> {
                             _providerSvitch = value;
 
                             setState(() {});
-                            debugPrint('');
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -225,10 +226,12 @@ class _ProductsPageState extends State<ProductsPage> {
                                   isbook: isbook,
                                   st: st,
                                   orders: orders,
+                                  text: searchController.text,
                                 ),
                               ),
                             );
-                            _providerSvitch != value;
+                            _providerSvitch = !value;
+                            setState(() {});
                           },
                         ),
                       ),
@@ -236,7 +239,7 @@ class _ProductsPageState extends State<ProductsPage> {
                   ),
                 ),
                 SizedBox(
-                  height: getHeight(552),
+                  height: getHeight(550),
                   child: CustomRefreshIndicator(
                     onRefresh: () {
                       setState(() {});
@@ -403,10 +406,11 @@ class _ProductsPageState extends State<ProductsPage> {
                                   ),
                                   Container(
                                     alignment: Alignment.center,
-                                    height: 30,
-                                    width: 60,
+                                    height: getHeight(35),
+                                    width: getWidth(65),
                                     margin: EdgeInsets.only(top: getHeight(30)),
                                     child: TextField(
+                                      style: TextStyle(fontSize: 14),
                                       // controller: controller,
                                       controller: TextEditingController(
                                         text: "${sonlar[index]}",
@@ -501,7 +505,6 @@ class _ProductsPageState extends State<ProductsPage> {
       document: gql(createOrderQuery(
           userJson["id"], userJson['counterpartyId'], productId, amount)),
     ));
-    print(create.toString());
     return "ok";
   }
 
@@ -510,12 +513,9 @@ class _ProductsPageState extends State<ProductsPage> {
       document: gql(getUser()),
     ));
     final userJson = user.data?["user"];
-    print(userJson['counterpartyId'].toString());
-    print(orders1.toString());
     QueryResult? create = await clientAll.value.mutate(MutationOptions(
       document: gql(createorderarray(userJson['counterpartyId'], orders1)),
     ));
-    print(create.toString());
     return "ok";
   }
 
@@ -525,7 +525,6 @@ class _ProductsPageState extends State<ProductsPage> {
     Widget continueButton = ElevatedButton(
       child: const Text("zakaz"),
       onPressed: () async {
-        print(orders2.toString());
         Navigator.pop(context);
         await createarray(orders2);
         orders.clear();

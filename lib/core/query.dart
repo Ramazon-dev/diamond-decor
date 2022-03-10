@@ -41,7 +41,6 @@ String registrQuery(
 }
 
 String ordersAllQuery(String amount) {
-  print(amount);
   return """{orders(
     $amount
  ){
@@ -78,7 +77,7 @@ query products{
 String getWithArticleP(String search) {
   return """{
    productsType(where:{
-     article_starts_with: "$search"
+     article_contains: "$search"
    }){
      nameModel
      article
@@ -110,8 +109,6 @@ String createOrderQuery(int id, int couterpartyId, int productId, int ammount) {
 }
 
 createorderarray(int couterpartyId, List array) {
-  // print(couterpartyId.toString());
-  // print(array.toString());
   return """mutation{
   createArrayOrder(arrayInput:{
     
