@@ -1,6 +1,5 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
@@ -14,10 +13,8 @@ import 'package:wallpaper/ui/widgets/appbar_widget.dart';
 class OrderProducts extends StatefulWidget {
   final List<int> sonlardaa;
   final List? datalist;
-
   const OrderProducts(
-      {required this.sonlardaa, required this.datalist, Key? key})
-      : super(key: key);
+      {required this.sonlardaa, required this.datalist, Key? key});
   @override
   State<OrderProducts> createState() => _OrderProductsState();
 }
@@ -91,6 +88,7 @@ class _OrderProductsState extends State<OrderProducts> {
                 orders.clear();
                 sonlar = List<int>.generate(10, (i) => i * 0);
                 Navigator.pop(context);
+
                 setState(() {});
                 _bottomNavBar.currentint = 1;
                 Future.delayed(const Duration(seconds: 2)).then((value) {

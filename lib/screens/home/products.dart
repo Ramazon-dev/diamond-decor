@@ -235,6 +235,7 @@ class _ProductsPageState extends State<ProductsPage> {
                               _providerSvitch = value;
 
                               setState(() {});
+                              // _providerSvitch = value;
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -244,7 +245,10 @@ class _ProductsPageState extends State<ProductsPage> {
                                   ),
                                 ),
                               );
-
+// shoxrux xon
+// urakesh
+// zaytun fishing
+// 
                               setState(() {});
                             }
                           },
