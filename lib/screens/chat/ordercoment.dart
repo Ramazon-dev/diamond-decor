@@ -143,8 +143,6 @@ class _ChatPageOrderState extends State<ChatPageOrder> {
       document: gql(sendMessae(message.text)),
     ));
 
-    print('$sendmes');
-
     final textMessage = types.TextMessage(
       author: _user,
       createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -160,7 +158,6 @@ class _ChatPageOrderState extends State<ChatPageOrder> {
       document: gql(orderAllComments()),
     ));
     final commentJson = commentsorder.data?['orderComments']['edges'];
-    print(commentJson.length.toString());
     final res = List.generate(commentJson.length, (i) {
       if (!(commentJson[i]['node']['photo'] == null)) {
         return {

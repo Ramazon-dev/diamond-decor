@@ -13,20 +13,10 @@ import 'package:wallpaper/ui/widgets/appbar_widget.dart';
 
 class OrderProducts extends StatefulWidget {
   final List<int> sonlardaa;
-  final int st;
-  final int end;
-  final int isbook;
   final List? datalist;
-  final List orders;
 
   const OrderProducts(
-      {required this.sonlardaa,
-      required this.datalist,
-      required this.end,
-      required this.isbook,
-      required this.st,
-      required this.orders,
-      Key? key})
+      {required this.sonlardaa, required this.datalist, Key? key})
       : super(key: key);
   @override
   State<OrderProducts> createState() => _OrderProductsState();
@@ -35,26 +25,18 @@ class OrderProducts extends StatefulWidget {
 class _OrderProductsState extends State<OrderProducts> {
   late ProviderBottomNavBar _bottomNavBar;
   bool providerSvitch = false;
-  // List<int> sonlar = List<int>.generate(10, (i) => i * 0);
+
   late List<int> sonlar;
-  late int st;
-  late int end;
-  late int isbook;
   late List? datalist;
   late TextEditingController controller;
-  late List orders;
+  List orders = [];
   var formKey = GlobalKey<FormState>();
-  var searchController =
-      TextEditingController.fromValue(const TextEditingValue(text: ""));
+
   @override
   void initState() {
     super.initState();
     sonlar = widget.sonlardaa;
     datalist = widget.datalist;
-    end = widget.end;
-    isbook = widget.isbook;
-    st = widget.st;
-    orders = widget.orders;
   }
 
   @override
@@ -62,476 +44,404 @@ class _OrderProductsState extends State<OrderProducts> {
     _bottomNavBar = context.watch();
     SizeConfig().init(context);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBArClass(),
-      bottomNavigationBar: Container(
-        height: 70,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 3,
-              blurRadius: 3,
-              offset: const Offset(2, 2),
-              blurStyle: BlurStyle.normal,
-            ),
-          ], // color: Colors.cyan,
-          color: Colors.white,
-          border: Border.all(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBArClass(),
+        bottomNavigationBar: Container(
+          height: 70,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 3,
+                blurRadius: 3,
+                offset: const Offset(2, 2),
+                blurStyle: BlurStyle.normal,
+              ),
+            ], // color: Colors.cyan,
             color: Colors.white,
-            // color: const Color(0xff878787),
-          ),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            primary: primaryColor,
-            fixedSize: Size(getWidth(280), getHeight(57)),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-          ),
-          onPressed: () async {
-            for (var i = 0; i < datalist!.length; i++) {
-              if (sonlar[i] != 0) {
-                orders.add(
-                    {"amount": sonlar[i], "productId": datalist![i]['id']});
-              }
-            }
-            if (orders.isEmpty) {
-              debugPrint("order is empty");
-              Future.delayed(const Duration(seconds: 2)).then((value) {
-                providerSvitch = false;
-                setState(() {});
-              });
-            } else {
-              debugPrint(orders.toString());
-              await createarray(orders);
-              orders.clear();
-              sonlar = List<int>.generate(10, (i) => i * 0);
-              Navigator.pop(context);
-              setState(() {});
-              _bottomNavBar.currentint = 1;
-              Future.delayed(const Duration(seconds: 2)).then((value) {
-                providerSvitch = false;
-                setState(() {});
-              });
-
-              // showDialog(
-              //   context: context,
-              //   builder: (context) {
-              //     return AlertDialog(
-              //       title: Text('Подтвердить ${orders.length} заказов?'),
-              //       actions: [
-              //         ElevatedButton(
-              //             onPressed: () {
-              //               Future.delayed(const Duration(seconds: 1))
-              //                   .then((value) {
-              //                 providerSvitch = false;
-              //                 setState(() {});
-              //               });
-              //               Navigator.pop(context);
-              //             },
-              //             child: const Text('Отменить')),
-              //         ElevatedButton(
-              //           onPressed: () async {
-
-              //           },
-              //           child: const Text('Заказать'),
-              //         ),
-              //       ],
-              //     );
-              //   },
-              // );
-            }
-          },
-          child: Text(
-            "Подтвердить",
-            style: TextStyle(
+            border: Border.all(
               color: Colors.white,
-              fontSize: getHeight(16),
-              fontWeight: FontWeight.w500,
+              // color: const Color(0xff878787),
+            ),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: primaryColor,
+              fixedSize: Size(getWidth(280), getHeight(57)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+            ),
+            onPressed: () async {
+              for (var i = 0; i < datalist!.length; i++) {
+                if (sonlar[i] != 0) {
+                  orders.add(
+                      {"amount": sonlar[i], "productId": datalist![i]['id']});
+                }
+              }
+              if (orders.isEmpty) {
+                Future.delayed(const Duration(seconds: 2)).then((value) {
+                  Navigator.pop(context);
+                  setState(() {});
+                });
+              } else {
+                await createarray(orders);
+                orders.clear();
+                sonlar = List<int>.generate(10, (i) => i * 0);
+                Navigator.pop(context);
+                setState(() {});
+                _bottomNavBar.currentint = 1;
+                Future.delayed(const Duration(seconds: 2)).then((value) {
+                  providerSvitch = false;
+                  setState(() {});
+                });
+              }
+            },
+            child: Text(
+              "Подтвердить",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: getHeight(16),
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ),
-      ),
-      body: FutureBuilder(
-        future: getproduct(searchController.text.toString()),
-        builder: (context, AsyncSnapshot<List> snap) {
-          if (snap.data == null) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            if (snap.data!.length < end) {
-              if (snap.data!.length < 10) {
-                datalist =
-                    snap.data!.getRange(st, snap.data!.length % 10).toList();
-              } else {
-                datalist = snap.data!
-                    .getRange(st, snap.data!.length % 10 + end)
-                    .toList();
-              }
-            } else {
-              datalist = snap.data!.getRange(st, end).toList();
-            }
-            return Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: getWidth(20),
-                    vertical: getHeight(20),
+        body: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: getWidth(20),
+                vertical: getHeight(20),
+              ),
+              width: 200,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    height: 30,
+                    width: 44,
+                    padding: const EdgeInsets.all(7),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset: const Offset(0, 0),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                    ),
+                    child: InkWell(
+                      onTap: () {},
+                      child: SvgPicture.asset(
+                        'assets/icons/arrow_back.svg',
+                      ),
+                    ),
                   ),
-                  width: 200,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        height: 30,
-                        width: 44,
-                        padding: const EdgeInsets.all(7),
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                              offset: const Offset(0, 0),
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
+                  Container(
+                    height: getHeight(35),
+                    width: getWidth(60),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset: const Offset(0, 0),
                         ),
-                        child: InkWell(
-                          onTap: () {
-                            sonlar = List<int>.generate(10, (i) => i * 0);
-                            if (st != 0) {
-                              st = st - 10;
-                              end = end - 10;
-                              setState(() {});
-                            }
-                          },
-                          child: SvgPicture.asset(
-                            'assets/icons/arrow_back.svg',
-                          ),
+                      ],
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    child: InkWell(
+                      onTap: () {},
+                      child: Text(
+                        "0/10",
+                        style: TextStyle(
+                          fontSize: getHeight(16),
+                          fontWeight: FontWeight.w600,
+                          color: primaryColor,
                         ),
                       ),
-                      Container(
-                        height: getHeight(35),
-                        width: getWidth(60),
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                              offset: const Offset(0, 0),
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                        ),
-                        child: InkWell(
-                          onTap: () {},
-                          child: Text(
-                            "$st/$end",
-                            style: TextStyle(
-                              fontSize: getHeight(16),
-                              fontWeight: FontWeight.w600,
-                              color: primaryColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: getHeight(30),
-                        width: getWidth(40),
-                        padding: const EdgeInsets.all(7),
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                              offset: const Offset(0, 0),
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            sonlar = List<int>.generate(10, (i) => i * 0);
-                            if (snap.data!.length > end + 10) {
-                              st = st + 10;
-                              setState(() {});
-                              end = end + 10;
-                            }
-                          },
-                          child: SvgPicture.asset(
-                              'assets/icons/arrow_forward.svg'),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: getHeight(589),
-                  child: CustomRefreshIndicator(
-                    onRefresh: () {
-                      setState(() {});
-                      return Future.delayed(const Duration(seconds: 2));
-                    },
-                    builder: (BuildContext context, Widget child,
-                        IndicatorController controller) {
-                      return AnimatedBuilder(
-                        animation: controller,
-                        builder: (BuildContext context, _) {
-                          return Stack(
-                            alignment: Alignment.topCenter,
-                            children: <Widget>[
-                              if (!controller.isIdle)
-                                Positioned(
-                                  top: getHeight(35) * controller.value,
-                                  child: SizedBox(
-                                    height: getHeight(30),
-                                    width: getWidth(30),
-                                    child: CircularProgressIndicator(
-                                      value: !controller.isLoading
-                                          ? controller.value.clamp(0.0, 1.0)
-                                          : null,
-                                    ),
-                                  ),
+                  Container(
+                    height: getHeight(30),
+                    width: getWidth(40),
+                    padding: const EdgeInsets.all(7),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset: const Offset(0, 0),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                    ),
+                    child: InkWell(
+                      onTap: () {},
+                      child: SvgPicture.asset('assets/icons/arrow_forward.svg'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: getHeight(589),
+              child: CustomRefreshIndicator(
+                onRefresh: () {
+                  setState(() {});
+                  return Future.delayed(const Duration(seconds: 2));
+                },
+                builder: (BuildContext context, Widget child,
+                    IndicatorController controller) {
+                  return AnimatedBuilder(
+                    animation: controller,
+                    builder: (BuildContext context, _) {
+                      return Stack(
+                        alignment: Alignment.topCenter,
+                        children: <Widget>[
+                          if (!controller.isIdle)
+                            Positioned(
+                              top: getHeight(35) * controller.value,
+                              child: SizedBox(
+                                height: getHeight(30),
+                                width: getWidth(30),
+                                child: CircularProgressIndicator(
+                                  value: !controller.isLoading
+                                      ? controller.value.clamp(0.0, 1.0)
+                                      : null,
                                 ),
-                              Transform.translate(
-                                offset: Offset(0, 100.0 * controller.value),
-                                child: child,
                               ),
-                            ],
-                          );
-                        },
+                            ),
+                          Transform.translate(
+                            offset: Offset(0, 100.0 * controller.value),
+                            child: child,
+                          ),
+                        ],
                       );
                     },
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        controller = TextEditingController(
-                          text: '${sonlar[index]}',
-                        );
-                        return Container(
-                          margin: EdgeInsets.symmetric(
-                            vertical: getWidth(10),
-                            horizontal: getHeight(20),
+                  );
+                },
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    controller = TextEditingController(
+                      text: '${sonlar[index]}',
+                    );
+                    return Container(
+                      margin: EdgeInsets.symmetric(
+                        vertical: getWidth(10),
+                        horizontal: getHeight(20),
+                      ),
+                      height: getHeight(180),
+                      width: getWidth(350),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                            offset: const Offset(0, 0),
                           ),
-                          height: getHeight(180),
-                          width: getWidth(350),
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 1,
-                                blurRadius: 1,
-                                offset: const Offset(0, 0),
-                              ),
-                            ],
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                          ),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                child: Row(
+                        ],
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      top: getHeight(20),
+                                      left: getHeight(getWidth(20)),
+                                      right: getWidth(8)),
+                                  child: datalist![index]['photo'] == null
+                                      ? Container(
+                                          decoration: BoxDecoration(
+                                              color: listTileColor,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(
+                                                      getWidth(6)))),
+                                          height: getHeight(63),
+                                          width: getWidth(63),
+                                        )
+                                      : SizedBox(
+                                          height: getHeight(63),
+                                          width: getWidth(63),
+                                          child: Image.network(
+                                              "https://diamond.softcity.uz/media/${datalist![index]['photo']}"),
+                                        ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
                                       margin: EdgeInsets.only(
                                           top: getHeight(20),
-                                          left: getHeight(getWidth(20)),
-                                          right: getWidth(8)),
-                                      child: datalist![index]['photo'] == null
-                                          ? Container(
-                                              decoration: BoxDecoration(
-                                                  color: listTileColor,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              getWidth(6)))),
-                                              height: getHeight(63),
-                                              width: getWidth(63),
-                                            )
-                                          : SizedBox(
-                                              height: getHeight(63),
-                                              width: getWidth(63),
-                                              child: Image.network(
-                                                  "https://diamond.softcity.uz/media/${datalist![index]['photo']}"),
-                                            ),
+                                          bottom: getHeight(11)),
+                                      child: Text(
+                                        datalist![index]['article'].toString(),
+                                        style: TextStyle(
+                                          fontSize: getWidth(16),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                     ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              top: getHeight(20),
-                                              bottom: getHeight(11)),
-                                          child: Text(
-                                            datalist![index]['article']
-                                                .toString(),
-                                            style: TextStyle(
-                                              fontSize: getWidth(16),
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
+                                    SizedBox(
+                                      width: getWidth(200),
+                                      child: Text(
+                                        datalist![index]['nameModel']
+                                            .toString(),
+                                        style: TextStyle(
+                                          fontSize: getWidth(12),
+                                          color: const Color(0xffD0D2DE),
                                         ),
-                                        SizedBox(
-                                          width: getWidth(200),
-                                          child: Text(
-                                            datalist![index]['nameModel']
-                                                .toString(),
-                                            style: TextStyle(
-                                              fontSize: getWidth(12),
-                                              color: const Color(0xffD0D2DE),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        top: getHeight(30), left: getWidth(55)),
-                                    width: getWidth(70),
-                                    height: getHeight(40),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Colors.transparent,
-                                      boxShadow: const [
-                                        BoxShadow(blurRadius: 1),
-                                        BoxShadow(
-                                          spreadRadius: 0.8,
-                                          color: Color(0xffD0D2DE),
-                                        ),
-                                      ],
-                                    ),
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        fixedSize:
-                                            Size(getWidth(70), getHeight(40)),
-                                        primary: Colors.white,
-                                        elevation: 0,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                      ),
-                                      onPressed: () {
-                                        if (sonlar[index] > 0) {
-                                          sonlar[index] = sonlar[index] - 1;
-                                          setState(() {});
-                                        }
-                                      },
-                                      child: Icon(
-                                        Icons.remove,
-                                        color: Colors.black,
-                                        size: getHeight(24),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    height: 30,
-                                    width: 60,
-                                    margin: EdgeInsets.only(top: getHeight(30)),
-                                    child: TextField(
-                                      // controller: controller,
-                                      controller: TextEditingController(
-                                        text: "${sonlar[index]}",
-                                      ),
-                                      keyboardType: TextInputType.number,
-                                      onChanged: (v) {
-                                        sonlar[index] = int.parse(v);
-                                      },
-                                      decoration: InputDecoration(
-                                        // hintText: '0',
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          borderSide: const BorderSide(
-                                            color: Colors.grey,
-                                            width: 0.5,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  // Text(
-                                  //     "${sonlar[index]}",
-                                  //     style: TextStyle(
-                                  //       fontSize: getHeight(20),
-                                  //       fontWeight: FontWeight.w500,
-                                  //     ),
-                                  //   ),
-
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        top: getHeight(30),
-                                        right: getWidth(55)),
-                                    height: getHeight(40),
-                                    width: getWidth(70),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Colors.transparent,
-                                      boxShadow: const [
-                                        BoxShadow(blurRadius: 1),
-                                        BoxShadow(
-                                            spreadRadius: 1,
-                                            color: Color(0xffD0D2DE))
-                                      ],
-                                    ),
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        fixedSize:
-                                            Size(getWidth(70), getHeight(40)),
-                                        primary: Colors.white,
-                                        elevation: 0,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                      ),
-                                      onPressed: () {
-                                        sonlar[index] = sonlar[index] + 1;
-                                        setState(() {});
-                                      },
-                                      child: Icon(
-                                        Icons.add,
-                                        color: Colors.black,
-                                        size: getHeight(24),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
+                              ],
+                            ),
                           ),
-                        );
-                      },
-                      itemCount: datalist!.length,
-                    ),
-                  ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(
+                                    top: getHeight(30), left: getWidth(55)),
+                                width: getWidth(70),
+                                height: getHeight(40),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.transparent,
+                                  boxShadow: const [
+                                    BoxShadow(blurRadius: 1),
+                                    BoxShadow(
+                                      spreadRadius: 0.8,
+                                      color: Color(0xffD0D2DE),
+                                    ),
+                                  ],
+                                ),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize:
+                                        Size(getWidth(70), getHeight(40)),
+                                    primary: Colors.white,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                  ),
+                                  onPressed: () {
+                                    if (sonlar[index] > 0) {
+                                      sonlar[index] = sonlar[index] - 1;
+                                      setState(() {});
+                                    }
+                                  },
+                                  child: Icon(
+                                    Icons.remove,
+                                    color: Colors.black,
+                                    size: getHeight(24),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                height: getHeight(35),
+                                width: getWidth(65),
+                                margin: EdgeInsets.only(top: getHeight(30)),
+                                child: TextField(
+                                  style: TextStyle(fontSize: 14),
+
+                                  // controller: controller,
+                                  controller: TextEditingController(
+                                    text: "${sonlar[index]}",
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  onChanged: (v) {
+                                    sonlar[index] = int.parse(v);
+                                  },
+                                  decoration: InputDecoration(
+                                    // hintText: '0',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: const BorderSide(
+                                        color: Colors.grey,
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              // Text(
+                              //     "${sonlar[index]}",
+                              //     style: TextStyle(
+                              //       fontSize: getHeight(20),
+                              //       fontWeight: FontWeight.w500,
+                              //     ),
+                              //   ),
+
+                              Container(
+                                margin: EdgeInsets.only(
+                                    top: getHeight(30), right: getWidth(55)),
+                                height: getHeight(40),
+                                width: getWidth(70),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.transparent,
+                                  boxShadow: const [
+                                    BoxShadow(blurRadius: 1),
+                                    BoxShadow(
+                                        spreadRadius: 1,
+                                        color: Color(0xffD0D2DE))
+                                  ],
+                                ),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize:
+                                        Size(getWidth(70), getHeight(40)),
+                                    primary: Colors.white,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                  ),
+                                  onPressed: () {
+                                    sonlar[index] = sonlar[index] + 1;
+                                    setState(() {});
+                                  },
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.black,
+                                    size: getHeight(24),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                  itemCount: datalist!.length,
                 ),
-              ],
-            );
-          }
-        },
-      ),
-    );
+              ),
+            ),
+          ],
+        ));
   }
 
   Future<List> getproduct(String serch) async {
@@ -551,7 +461,6 @@ class _OrderProductsState extends State<OrderProducts> {
       document: gql(createOrderQuery(
           userJson["id"], userJson['counterpartyId'], productId, amount)),
     ));
-    print(create.toString());
     return "ok";
   }
 
@@ -560,12 +469,9 @@ class _OrderProductsState extends State<OrderProducts> {
       document: gql(getUser()),
     ));
     final userJson = user.data?["user"];
-    print(userJson['counterpartyId'].toString());
-    print(orders1.toString());
     QueryResult? create = await clientAll.value.mutate(MutationOptions(
       document: gql(createorderarray(userJson['counterpartyId'], orders1)),
     ));
-    print(create.toString());
     return "ok";
   }
 
@@ -575,7 +481,6 @@ class _OrderProductsState extends State<OrderProducts> {
     Widget continueButton = ElevatedButton(
       child: const Text("zakaz"),
       onPressed: () async {
-        print(orders2.toString());
         Navigator.pop(context);
         await createarray(orders2);
         orders.clear();

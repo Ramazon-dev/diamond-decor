@@ -55,9 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
       token = box.read("token");
       value = JwtDecoder.isExpired(token);
       return value;
-    } catch (e) {
-      print("ERROR: $e");
-    }
+    } catch (e) {}
     return value;
   }
 }

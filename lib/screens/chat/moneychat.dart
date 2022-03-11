@@ -197,7 +197,6 @@ class _ChatPageMoneyState extends State<ChatPageMoney> {
         .toList();
 
     setState(() {
-      print('$messages _______________________');
       _messages = messages;
     });
   }

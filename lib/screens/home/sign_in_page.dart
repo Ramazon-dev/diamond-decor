@@ -174,20 +174,14 @@ class _SignInPageState extends State<SignInPage> {
                       onPressed: () async {
                         setState(() {});
                         if (formKey.currentState!.validate()) {
-                          debugPrint("vaidate dan otdi");
                           QueryResult result =
                               await client.value.mutate(MutationOptions(
                             document: gql(loginQuery(
                                 emainController.text, passwordController.text)),
                           ));
-                          debugPrint("funcsiyadan dan otdi");
                           final productlist = result.data?['login'];
                           String accesstoken = productlist['accessToken'] ?? '';
-                          debugPrint("ozgaruvchi dan otdi");
-                          debugPrint("oxirgisidan  otdi");
-                          debugPrint("if dan oldin token $accesstoken");
                           if (accesstoken == "") {
-                            debugPrint("if ichida token $accesstoken");
                             setState(() {});
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: const Text(
