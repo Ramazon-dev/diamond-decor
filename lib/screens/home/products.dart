@@ -12,12 +12,14 @@ import 'package:wallpaper/provider/provider_bottom_nav_bar.dart';
 import 'package:wallpaper/screens/home/order_products.dart';
 
 class ProductsPage extends StatefulWidget {
+  const ProductsPage({Key? key}) : super(key: key);
+
   @override
   _ProductsPageState createState() => _ProductsPageState();
 }
 
 class _ProductsPageState extends State<ProductsPage> {
-  late ProviderBottomNavBar _bottomNavBar;
+  late ProviderBottomNavBar bottomNavBar;
 
   bool _providerSvitch = false;
   List<int> sonlar = List<int>.generate(10, (i) => i * 0);
@@ -36,13 +38,12 @@ class _ProductsPageState extends State<ProductsPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    _bottomNavBar = context.watch();
+    bottomNavBar = context.watch();
     SizeConfig().init(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -245,10 +246,6 @@ class _ProductsPageState extends State<ProductsPage> {
                                   ),
                                 ),
                               );
-// shoxrux xon
-// urakesh
-// zaytun fishing
-// 
                               setState(() {});
                             }
                           },
