@@ -27,6 +27,7 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
   bool isAllcheck = false;
   List deleteList = List.generate(10, (index) => false);
   int st = 0;
+  
 
   int end = 10;
   List? snapshot;
@@ -41,6 +42,7 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
       } else {
         return Container();
       }
+      
     });
     return Column(
       children: [
