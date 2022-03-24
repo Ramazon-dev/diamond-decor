@@ -34,6 +34,8 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
   List<bool>? listorder;
 
   @override
+
+
   Widget build(BuildContext context) {
     listorder = context.watch<ProviderSvitch>().filterlist;
     List<Widget> row = List.generate(6, (i) {
@@ -42,7 +44,8 @@ class _HistoryOrderPageState extends State<HistoryOrderPage> {
       } else {
         return Container();
       }
-      
+
+
     });
     return Column(
       children: [
