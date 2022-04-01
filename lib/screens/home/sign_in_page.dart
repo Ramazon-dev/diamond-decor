@@ -29,9 +29,9 @@ class _SignInPageState extends State<SignInPage> {
         width: getWidth(390),
         child: SingleChildScrollView(
           child: Container(
-            height: getHeight(641),
-            width: getWidth(324),
-            padding: EdgeInsets.only(left: getHeight(22), top: getHeight(36)),
+            // height: getHeight(641),
+            // width: getWidth(324),
+            padding: EdgeInsets.only(left: getHeight(22), top: getHeight(36),bottom:20 ),
             margin: EdgeInsets.symmetric(
               horizontal: getWidth(30),
               vertical: getHeight(60),
