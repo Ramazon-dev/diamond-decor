@@ -226,6 +226,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                 });
                               }
                             }
+                            
                             if (orders.isEmpty) {
                               Future.delayed(const Duration(seconds: 2))
                                   .then((value) {
